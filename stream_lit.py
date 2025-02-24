@@ -5,23 +5,18 @@ import matplotlib.pyplot as plt
 import folium
 from shapely.geometry import Point
 import joblib
-import gdown
+import os
 
-# Load dataset from Google Drive
+# Load dataset from local file
 @st.cache_data
 def load_data():
-    file_id = "16a0XZgq3wvrPcDsvk-2V_FY-QH7-vySr"
-    url = f"https://drive.google.com/uc?export=download&id={file_id}"
-
-    # Use requests to download
-    response = requests.get(url, stream=True)
-    output = "data_2021_to_2024.csv"
-
-    with open(output, "wb") as f:
-        for chunk in response.iter_content(chunk_size=1024 * 1024):  # Download in chunks
-            f.write(chunk)
-
-    return pd.read_csv(output)
+    file_path = "C:/Users/maria/Desktop/RETAIL_PROJECT/data_2021_to_2024.csv"  # Update to absolute local path
+    
+    if os.path.exists(file_path):
+        return pd.read_csv(file_path)
+    else:
+        st.error("⚠️ Error: The dataset file is missing. Please place 'data_2021_to_2024.csv' in the project folder.")
+        return pd.DataFrame()  # Return empty DataFrame if file is missing
 
 df = load_data()
 
