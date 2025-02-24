@@ -10,9 +10,17 @@ import gdown
 # Load dataset from Google Drive
 @st.cache_data
 def load_data():
-    url = "https://drive.google.com/uc?id=16a0XZgq3wvrPcDsvk-2V_FY-QH7-vySr"
+    file_id = "16a0XZgq3wvrPcDsvk-2V_FY-QH7-vySr"
+    url = f"https://drive.google.com/uc?export=download&id={file_id}"
+
+    # Use requests to download
+    response = requests.get(url, stream=True)
     output = "data_2021_to_2024.csv"
-    gdown.download(url, output, quiet=False)
+
+    with open(output, "wb") as f:
+        for chunk in response.iter_content(chunk_size=1024 * 1024):  # Download in chunks
+            f.write(chunk)
+
     return pd.read_csv(output)
 
 df = load_data()
